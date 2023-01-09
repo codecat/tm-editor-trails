@@ -1,0 +1,9 @@
+[meta]
+name = "Editor Trails"
+author = "Miss"
+category = "Editor"
+version = "0.1"
+siteid = 251
+
+[script]
+dependencies = [ "Camera" ]
