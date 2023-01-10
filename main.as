@@ -95,6 +95,11 @@ void Main()
 			continue;
 		}
 
+		// Make sure a player object actually exists
+		if (pg.Players.Length == 0) {
+			continue;
+		}
+
 		// If we weren't previously in editor play mode, we know that we have just entered it
 		if (!State::InEditorPlay) {
 			OnEditorPlayEnter();
