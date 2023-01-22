@@ -10,6 +10,9 @@ bool Setting_Loop = false;
 [Setting hidden]
 bool Setting_Follow = false;
 
+[Setting hidden]
+bool Setting_Events = true;
+
 
 
 [Setting category="General" name="Minimum duration" min=1.0 max=60.0 description="The minimum time in seconds for a trail's instance to be considered valid."]
@@ -46,3 +49,6 @@ vec4 Setting_CarPositionColor = vec4(1, 0, 0, 1);
 
 [Setting category="Appearance" name="Velocity vector color" color]
 vec4 Setting_CarVelocityColor = vec4(1, 1, 0, 1);
+
+[Setting category="Appearance" name="Event scale" min=0.4 max=2.0]
+float Setting_EventScale = 1.0f;

@@ -55,6 +55,9 @@ void OnMouseButton(bool down, int button, int x, int y)
 
 void Main()
 {
+	// Load font for trail events
+	TrailView::FontBold = nvg::LoadFont("DroidSans-Bold.ttf");
+
 	// Some states we need to keep track of
 	bool lastEntityStateAvailable = false;
 	int lastStartTime = 0;
@@ -162,7 +165,7 @@ void Main()
 		}
 
 		// Add sample
-		currentTrail.AddSample(scriptPlayer);
+		currentTrail.Update(scriptPlayer);
 	}
 }
 
