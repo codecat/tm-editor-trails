@@ -1,5 +1,7 @@
 namespace TrailView
 {
+	int FontBold;
+
 	bool Playing = false;
 	double CurrentTime;
 
@@ -69,34 +71,19 @@ namespace TrailView
 			if (MinTime == -1 || startTime < MinTime) { MinTime = startTime; }
 			if (MaxTime == -1 || endTime > MaxTime) { MaxTime = endTime; }
 
-			nvg::BeginPath();
-			bool firstPoint = true;
-			for (uint j = 0; j < trail.m_samples.Length - 1; j++) {
-				vec3 pos = trail.m_samples[j].m_position;
+			// Render the trail's line
+			RenderTrailLine(trail);
 
-				if (firstPoint) {
-					vec3 pa = Camera::ToScreen(pos);
-					if (pa.z <= 0) {
-						nvg::MoveTo(pa.xy);
-						firstPoint = false;
-					} else {
-						continue;
-					}
-				}
-
-				vec3 pb = Camera::ToScreen(trail.m_samples[j + 1].m_position);
-				if (pb.z > 0) {
-					firstPoint = true;
-				} else {
-					nvg::LineTo(pb.xy);
-				}
+			// Render events on trail
+			if (Setting_Events) {
+				RenderTrailEvents(trail);
 			}
-			nvg::StrokeWidth(Setting_TrailWidth);
-			nvg::StrokeColor(Setting_TrailColor);
-			nvg::Stroke();
 
+			// If the current time is within this trail's time
 			if (CurrentTime >= startTime && CurrentTime <= endTime) {
 				auto carSample = trail.m_player.m_interpolatedSample;
+
+				// Render the trail's car
 				RenderCar(carSample);
 
 				if (Setting_Follow) {
@@ -132,6 +119,42 @@ namespace TrailView
 		}
 
 		RenderWindow();
+	}
+
+	void RenderTrailLine(Trail@ trail)
+	{
+		nvg::BeginPath();
+		bool firstPoint = true;
+		for (uint i = 0; i < trail.m_samples.Length - 1; i++) {
+			vec3 pos = trail.m_samples[i].m_position;
+
+			if (firstPoint) {
+				vec3 pa = Camera::ToScreen(pos);
+				if (pa.z <= 0) {
+					nvg::MoveTo(pa.xy);
+					firstPoint = false;
+				} else {
+					continue;
+				}
+			}
+
+			vec3 pb = Camera::ToScreen(trail.m_samples[i + 1].m_position);
+			if (pb.z > 0) {
+				firstPoint = true;
+			} else {
+				nvg::LineTo(pb.xy);
+			}
+		}
+		nvg::StrokeWidth(Setting_TrailWidth);
+		nvg::StrokeColor(Setting_TrailColor);
+		nvg::Stroke();
+	}
+
+	void RenderTrailEvents(Trail@ trail)
+	{
+		for (uint i = 0; i < trail.m_events.Length; i++) {
+			trail.m_events[i].Render();
+		}
 	}
 
 	void RenderCar(const Sample &in sample)
@@ -187,6 +210,8 @@ namespace TrailView
 				Setting_Loop = UI::Checkbox("Looping", Setting_Loop);
 				UI::SameLine();
 				Setting_Follow = UI::Checkbox("Follow", Setting_Follow);
+				UI::SameLine();
+				Setting_Events = UI::Checkbox("Events", Setting_Events);
 
 				UI::SameLine();
 				if (MinTime < 0.5) {

@@ -14,13 +14,15 @@ namespace DebugWindow
 			for (int i = int(Trails::Items.Length) - 1; i >= 0; i--) {
 				auto trail = Trails::Items[i];
 
-				uint numSamples = trail.m_samples.Length;
-				double duration = trail.GetDuration();
-
 				UI::Separator();
 				UI::Text("Replay " + i + ":");
-				UI::Text("-- Samples: \\$f39" + numSamples);
-				UI::Text("-- Duration: \\$f39" + Text::Format("%.02f", duration) + " seconds");
+				UI::Text("-- Samples: \\$f39" + trail.m_samples.Length);
+				UI::Text("-- Duration: \\$f39" + Text::Format("%.02f", trail.GetDuration()) + " seconds");
+				UI::Text("-- Events: \\$f39" + trail.m_events.Length);
+				for (uint j = 0; j < trail.m_events.Length; j++) {
+					auto event = trail.m_events[j];
+					UI::Text("-- Event[" + j + "] = \\$f39\"" + event.Text() + "\"");
+				}
 			}
 		}
 		UI::End();
