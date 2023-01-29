@@ -3,6 +3,8 @@ namespace State
 	bool InEditor = false;
 	bool InEditorPlay = false;
 	bool MenuButtonDown = false;
+
+	int CurrentRaceTime = 0;
 }
 
 void OnEditorLeave()
@@ -89,7 +91,11 @@ void Main()
 		State::InEditor = true;
 
 		// Get the playground if we're currently in it
+#if TMNEXT
 		auto pg = cast<CSmArenaClient>(GetApp().CurrentPlayground);
+#else
+		auto pg = cast<CTrackManiaRace1P>(GetApp().CurrentPlayground);
+#endif
 		if (pg is null) {
 			if (State::InEditorPlay) {
 				OnEditorPlayLeave();
@@ -103,18 +109,44 @@ void Main()
 			continue;
 		}
 
+#if !TMNEXT
+		// Make sure the player object has spawned
+		if (!cast<CTrackManiaPlayer>(pg.Players[0]).IsSpawned) {
+			if (State::InEditorPlay) {
+				OnEditorPlayLeave();
+			}
+			State::InEditorPlay = false;
+			continue;
+		}
+#endif
+
 		// If we weren't previously in editor play mode, we know that we have just entered it
 		if (!State::InEditorPlay) {
 			OnEditorPlayEnter();
 		}
 		State::InEditorPlay = true;
 
-		// Get the player object containing the information about the player that we need
+#if TMNEXT
+		// Get player information in Trackmania
 		auto player = cast<CSmPlayer>(pg.Players[0]);
 		auto scriptPlayer = cast<CSmScriptPlayer>(player.ScriptAPI);
 
+		bool entityStateAvailable = scriptPlayer.IsEntityStateAvailable;
+		int startTime = scriptPlayer.StartTime;
+		State::CurrentRaceTime = scriptPlayer.CurrentRaceTime;
+
+#else
+		// Get player information in Maniaplanet
+		auto player = cast<CTrackManiaPlayer>(pg.Players[0]);
+		auto scriptPlayer = player.ScriptAPI;
+
+		bool entityStateAvailable = (scriptPlayer.RaceState == CTrackManiaPlayer::ERaceState::Running);
+		int startTime = int(scriptPlayer.RaceStartTime);
+		State::CurrentRaceTime = scriptPlayer.CurRace.Time;
+#endif
+
 		// Do nothing if the entity state is not available
-		if (!scriptPlayer.IsEntityStateAvailable) {
+		if (!entityStateAvailable) {
 			lastEntityStateAvailable = false;
 			continue;
 		}
@@ -130,12 +162,12 @@ void Main()
 		auto currentTrail = Trails::GetCurrent();
 
 		// If the start time has increased since the last time we stored it, we have started a new run
-		if (scriptPlayer.StartTime > lastStartTime) {
+		if (startTime > lastStartTime) {
 			trace("Starting a new run");
 
 			// Keep track of our start time and our starting current race time
-			lastStartTime = scriptPlayer.StartTime;
-			lastCurrentRaceTime = scriptPlayer.CurrentRaceTime;
+			lastStartTime = startTime;
+			lastCurrentRaceTime = State::CurrentRaceTime;
 
 			// Check if we need to remove the current trail because there are not enough samples
 			if (currentTrail.GetDuration() < Setting_MinimumDuration) {
@@ -148,11 +180,11 @@ void Main()
 
 		// If we haven't elapsed any time, don't save a sample (for example, if we pressed escape and
 		// the "Return to Editor?" window is visible)
-		int elapsedTime = scriptPlayer.CurrentRaceTime - lastCurrentRaceTime;
+		int elapsedTime = State::CurrentRaceTime - lastCurrentRaceTime;
 		if (elapsedTime < (1000 / Setting_SamplesPerSecond)) {
 			continue;
 		}
-		lastCurrentRaceTime = scriptPlayer.CurrentRaceTime;
+		lastCurrentRaceTime = State::CurrentRaceTime;
 
 		// Don't add sample if the settings say we don't need to
 		if (!Setting_CaptureSamples) {
@@ -160,7 +192,7 @@ void Main()
 		}
 
 		// Don't add samples if we're counting down (usually between 300 to 400 milliseconds in editor)
-		if (scriptPlayer.CurrentRaceTime < 0) {
+		if (State::CurrentRaceTime < 0) {
 			continue;
 		}
 

@@ -10,6 +10,15 @@ namespace DebugWindow
 				Trails::Clear();
 			}
 
+			UI::Separator();
+
+			UI::Text("State::InEditor: \\$f39" + tostring(State::InEditor));
+			UI::Text("State::InEditorPlay: \\$f39" + tostring(State::InEditorPlay));
+			UI::Text("State::MenuButtonDown: \\$f39" + tostring(State::MenuButtonDown));
+			UI::Text("State::CurrentRaceTime: \\$f39" + tostring(State::CurrentRaceTime));
+
+			UI::Separator();
+
 			UI::Text("Trail count: \\$f39" + Trails::Items.Length);
 			for (int i = int(Trails::Items.Length) - 1; i >= 0; i--) {
 				auto trail = Trails::Items[i];
