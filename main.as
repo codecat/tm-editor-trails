@@ -56,7 +56,7 @@ void OnMouseButton(bool down, int button, int x, int y)
 void Main()
 {
 	// Load font for trail events
-	TrailView::FontBold = nvg::LoadFont("DroidSans-Bold.ttf");
+	TrailView::FontBold = nvg::LoadFont("DroidSans-Bold.ttf", true);
 
 	// Some states we need to keep track of
 	bool lastEntityStateAvailable = false;
