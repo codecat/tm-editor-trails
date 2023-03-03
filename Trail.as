@@ -58,7 +58,29 @@ class Trail
 		Sample newSample;
 		newSample.m_time = State::CurrentRaceTime / 1000.0;
 		newSample.m_position = scriptPlayer.Position;
+#if TMNEXT
+		{
+			vec3 forward = scriptPlayer.AimDirection.Normalized();
+			vec3 up = scriptPlayer.UpDirection.Normalized();
+			vec3 right = Math::Cross(up, forward).Normalized();
+
+			quat q;
+			q.w = Math::Sqrt(1.f + right.x + up.y + forward.z) / 2.f;
+
+			if (Math::Abs(q.w) < 1e-5f) {
+				q = quat(0.f, 0.f, 0.f, 1.f);
+			} else {
+				float t = 1.f / (4.f * q.w);
+				q.x = (up.z - forward.y) * t;
+				q.y = (forward.x - right.z) * t;
+				q.z = (right.y - up.x) * t;
+			}
+
+			newSample.m_dir = q;
+		}
+#else
 		newSample.m_dir = quat(scriptPlayer.AimDirection);
+#endif
 		newSample.m_velocity = velocity;
 		m_samples.InsertLast(newSample);
 	}
