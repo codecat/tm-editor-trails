@@ -72,9 +72,9 @@ namespace TrailView
 			if (MaxTime == -1 || endTime > MaxTime) { MaxTime = endTime; }
 
 			// Render the trail's line
-            if (Setting_DisplayTrails) {
-			    RenderTrailLine(trail);
-            }
+			if (Setting_DisplayTrails) {
+				RenderTrailLine(trail);
+			}
 
 			// Render events on trail
 			if (Setting_Events) {
@@ -195,8 +195,7 @@ namespace TrailView
 			cols[1] = vec4(0, 1, 0, 1);
 			cols[2] = vec4(0, 0, 1, 1);
 
-			for(uint aIdx = 0; aIdx < 3; aIdx++)
-			{
+			for(uint aIdx = 0; aIdx < 3; aIdx++) {
 				vec3 v = sample.m_position + dir * axes[aIdx];
 				vec3 vSS = Camera::ToScreen(v);
 				
@@ -239,16 +238,14 @@ namespace TrailView
 
 			// Draw each face consisting of 4 lines
 			// Overdraws quite a bit. 24 lines instead of 12
-			for(uint fIdx = 0; fIdx < 6; fIdx++)
-			{
+			for(uint fIdx = 0; fIdx < 6; fIdx++) {
 				vec3 v3 = sample.m_position + dir * verts[faces[fIdx][3]];
 				vec3 v3SS = Camera::ToScreen(v3);
 				if (v3SS.z > 0) { continue; }
 
 				nvg::BeginPath();
 				nvg::MoveTo(v3SS.xy);
-				for(uint vIdx = 0; vIdx < 4; vIdx++)
-				{
+				for(uint vIdx = 0; vIdx < 4; vIdx++) {
 					vec3 v = sample.m_position + dir * verts[faces[fIdx][vIdx]];
 					vec3 vSS = Camera::ToScreen(v);
 					if (vSS.z > 0) { continue; }
