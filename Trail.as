@@ -61,7 +61,9 @@ class Trail
 #if TMNEXT
 		{
 			vec3 forward = scriptPlayer.AimDirection.Normalized();
-			vec3 up = scriptPlayer.UpDirection.Normalized();
+			vec3 up = scriptPlayer.UpDirection;
+			up -= forward * Math::Dot(up, forward);
+			up = up.Normalized();
 			vec3 right = Math::Cross(up, forward).Normalized();
 
 			quat q;
@@ -76,7 +78,7 @@ class Trail
 				q.z = (right.y - up.x) * t;
 			}
 
-			newSample.m_dir = q;
+			newSample.m_dir = q.Normalized();
 		}
 #else
 		newSample.m_dir = quat(scriptPlayer.AimDirection);
