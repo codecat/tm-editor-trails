@@ -230,23 +230,23 @@ namespace TrailView
 			verts[6] = vec3(-.5f, -.5f,  .5f) * vec3(carHalfWidth, carHeightDown, carLengthFront);
 			verts[7] = vec3( .5f, -.5f,  .5f) * vec3(carHalfWidth, carHeightDown, carLengthFront);
 
-			// Cube faces (indices to vertices)
-			array<array<uint>> faces = {
-				{3, 2, 1, 0}, {6, 5, 4, 7}, 
-				{2, 3, 6, 7}, {0, 1, 4, 5},
-				{5, 6, 3, 0}, {7, 4, 1, 2}};
+			/*
+			 * Indices to cube verts ordered to draw cube with 12 lines
+			 * 0-<-1 1-<-4 4-<-5 5-<-0
+			 *     |     |     |     |
+			 * 3---2 2---7 7---6 6---3
+			 */
+			array<array<uint>> indices = {{3, 2, 1, 0}, {2, 7, 4, 1}, {7, 6, 5, 4}, {6, 3, 0, 5}};
 
-			// Draw each face consisting of 4 lines
-			// Overdraws quite a bit. 24 lines instead of 12
-			for(uint fIdx = 0; fIdx < 6; fIdx++) {
-				vec3 v3 = sample.m_position + dir * verts[faces[fIdx][3]];
-				vec3 v3SS = Camera::ToScreen(v3);
-				if (v3SS.z > 0) { continue; }
+			for(uint sIdx = 0; sIdx < 4; sIdx++) {
+				vec3 v0 = sample.m_position + dir * verts[indices[sIdx][0]];
+				vec3 v0SS = Camera::ToScreen(v0);
+				if (v0SS.z > 0) { continue; }
 
 				nvg::BeginPath();
-				nvg::MoveTo(v3SS.xy);
-				for(uint vIdx = 0; vIdx < 4; vIdx++) {
-					vec3 v = sample.m_position + dir * verts[faces[fIdx][vIdx]];
+				nvg::MoveTo(v0SS.xy);
+				for(uint vIdx = 1; vIdx < 4; vIdx++) {
+					vec3 v = sample.m_position + dir * verts[indices[sIdx][vIdx]];
 					vec3 vSS = Camera::ToScreen(v);
 					if (vSS.z > 0) { continue; }
 					nvg::LineTo(vSS.xy);
