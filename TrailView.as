@@ -260,8 +260,8 @@ namespace TrailView
 
 	void RenderWindow()
 	{
-		UI::SetNextWindowSize(550, 160, UI::Cond::Appearing);
-		if (UI::Begin(Icons::PlayCircleO + " Editor Trails###EditorTrails")) {
+		UI::SetNextWindowSize(550, 130, UI::Cond::Appearing);
+		if (UI::Begin(Icons::PlayCircleO + " Editor Trails###EditorTrails", Setting_EnableTrails)) {
 			if (Trails::Items.Length == 0) {
 				UI::Text("Enter test mode to record a trail.");
 			} else {
