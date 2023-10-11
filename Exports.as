@@ -1,4 +1,4 @@
 namespace EditorTrails
 {
-    import array<ITrail@>@ GetTrails() from "EditorTrails";
+    import const array<const ITrail@>@ GetTrails() from "EditorTrails";
 }

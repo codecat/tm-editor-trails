@@ -1,7 +1,7 @@
 namespace Trails
 {
 	array<Trail@> Items;
-	array<EditorTrails::ITrail@> ItemsForExport;
+	array<const EditorTrails::ITrail@> ItemsForExport;
 
 	Trail@ CreateNew()
 	{

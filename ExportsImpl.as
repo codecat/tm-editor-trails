@@ -1,6 +1,6 @@
 namespace EditorTrails
 {
-    array<ITrail@>@ GetTrails()
+    const array<const ITrail@>@ GetTrails()
     {
         return Trails::ItemsForExport;
     }
