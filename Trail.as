@@ -9,10 +9,10 @@ class Trail : EditorTrails::ITrail
 
 	vec3 m_lastPosition;
 	int m_lastGear = 1;
-	int m_lastRespawnCount = 0;
+	uint m_lastRespawnCount = 0;
 	bool m_hasFinished = false;
 	bool m_didRespawn = false;
-	int m_lastLapCount = 1;
+	uint m_lastLapCount = 1;
 	int m_lastCp = 0;
 
 	Trail()

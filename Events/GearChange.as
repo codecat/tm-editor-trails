@@ -36,7 +36,7 @@ namespace Events
 		void PopulateHoverTextLines() override
 		{
 			if (hoverTextLines.Length > 0) return;
-			hoverTextLines.InsertLast(Time::Format(m_time * 1000.));
+			hoverTextLines.InsertLast(Time::Format(int64(m_time * 1000.)));
 			hoverTextLines.InsertLast("Gear " + m_prev + Icons::ArrowRight + m_new);
 		}
 	}
