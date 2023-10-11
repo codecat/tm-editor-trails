@@ -1,3 +1,6 @@
+bool g_EventHovered = false;
+vec2 g_MouseCoords;
+
 namespace TrailView
 {
 	int FontBold;
@@ -61,6 +64,8 @@ namespace TrailView
 		double sumY = 0;
 		double sumZ = 0;
 		int numPos = 0;
+		g_EventHovered = false;
+		g_MouseCoords = UI::GetMousePos();
 
 		for (uint i = 0; i < Trails::Items.Length; i++) {
 			auto trail = Trails::Items[i];

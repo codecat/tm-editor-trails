@@ -53,6 +53,11 @@ vec4 Setting_CarVelocityColor = vec4(1, 1, 0, 1);
 [Setting category="Appearance" name="Event scale" min=0.4 max=2.0]
 float Setting_EventScale = 1.0f;
 
+[Setting category="Appearance" name="Hover animation duration" min=0 max=1000]
+uint Setting_HoverAnimDuration = 150;
+
+
+
 [Setting category="Blender Integration" name="Enable" description="Upon reentering the editor, send the recorded trails to blender via an HTTP POST."]
 bool Setting_EnableUploadTrails = false;
 

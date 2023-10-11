@@ -31,5 +31,13 @@ namespace Events
 				return vec4(0.55f, 0.82f, 1, 1);
 			}
 		}
+
+		void PopulateHoverTextLines() override
+		{
+			if (hoverTextLines.Length > 0) return;
+			hoverTextLines.InsertLast(Time::Format(m_time));
+			hoverTextLines.InsertLast("Respawn " + m_number);
+			if (m_standing) hoverTextLines.InsertLast("Standing Respawn");
+		}
 	}
 }

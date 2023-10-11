@@ -22,6 +22,9 @@ namespace DebugWindow
 			UI::Text("State::InEditorPlay: \\$f39" + tostring(State::InEditorPlay));
 			UI::Text("State::MenuButtonDown: \\$f39" + tostring(State::MenuButtonDown));
 			UI::Text("State::CurrentRaceTime: \\$f39" + tostring(State::CurrentRaceTime));
+			UI::Text("State::DeltaTime: \\$f39" + tostring(State::DeltaTime));
+			UI::Text("g_EventHovered: \\$f39" + tostring(g_EventHovered));
+			UI::Text("g_MouseCoords: \\$f39" + tostring(g_MouseCoords));
 
 			UI::Separator();
 

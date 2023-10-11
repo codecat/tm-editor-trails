@@ -32,5 +32,12 @@ namespace Events
 				return vec4(1, 0.5f, 0.5f, 1);
 			}
 		}
+
+		void PopulateHoverTextLines() override
+		{
+			if (hoverTextLines.Length > 0) return;
+			hoverTextLines.InsertLast(Time::Format(m_time));
+			hoverTextLines.InsertLast("Gear " + m_prev + Icons::ArrowRight + m_new);
+		}
 	}
 }

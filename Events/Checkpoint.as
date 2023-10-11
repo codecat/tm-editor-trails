@@ -22,7 +22,7 @@ namespace Events
 				return Icons::Trophy;
 			if (m_isEndLap)
 				return "Lap " + m_lapEndNb;
-			return Icons::ClockO;
+			return Icons::ClockO + " " + m_number;
 		}
 
 		Json::Value@ ToJson() const override
@@ -56,7 +56,15 @@ namespace Events
                 // silver
 			    return vec4(0.655f, 0.665f, 0.68f, 1);
             // checkpoint, pale green
-            return vec4(0.6f, 0.98f, 0.6f, 1);
+            return vec4(0.25f, 0.98f, 0.25f, 1);
+		}
+
+		void PopulateHoverTextLines() override
+		{
+			if (hoverTextLines.Length > 0) return;
+			hoverTextLines.InsertLast(Time::Format(m_time));
+			hoverTextLines.InsertLast("No Respawn: " + Time::Format(m_noRespawnTime));
+			hoverTextLines.InsertLast("Nb Respawns: " + Time::Format(m_respawns));
 		}
 	}
 }

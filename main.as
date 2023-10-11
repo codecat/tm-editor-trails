@@ -5,6 +5,8 @@ namespace State
 	bool MenuButtonDown = false;
 
 	int CurrentRaceTime = 0;
+
+	float DeltaTime = 10.;
 }
 
 void OnEditorLeave()
@@ -208,6 +210,7 @@ void Main()
 void Update(float dt)
 {
 	if (State::InEditor && !State::InEditorPlay) {
+		State::DeltaTime = dt;
 		// Update trail view
 		TrailView::Update(dt);
 	}
