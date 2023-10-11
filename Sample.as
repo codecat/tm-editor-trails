@@ -1,4 +1,4 @@
-class Sample
+class Sample : EditorTrails::ISample
 {
 	double m_time;
 	vec3 m_position;
@@ -15,7 +15,7 @@ class Sample
 		return ret;
 	}
 
-	Json::Value@ ToJson()
+	Json::Value@ ToJson() const
 	{
 		auto data = Json::Object();
 		data['t'] = m_time;
@@ -33,5 +33,25 @@ class Sample
 		data['v'].Add(m_velocity.y);
 		data['v'].Add(m_velocity.z);
 		return data;
+	}
+
+	double get_Time() const
+	{
+		return m_time;
+	}
+
+	vec3 get_Position() const
+	{
+		return m_position;
+	}
+
+	vec3 get_Velocity() const
+	{
+		return m_velocity;
+	}
+
+	quat get_Dir() const
+	{
+		return m_dir;
 	}
 }

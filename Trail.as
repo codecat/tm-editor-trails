@@ -1,7 +1,8 @@
 class Trail : EditorTrails::ITrail
 {
 	array<Sample> m_samples;
-	array<Event@> m_events;
+	array<EditorTrails::ISample@> m_samplesHandles;
+	array<EditorTrails::IEvent@> m_events;
 
 	TrailPlayer@ m_player; //TODO: Do we need this here? It's a circular reference!
 
@@ -11,34 +12,10 @@ class Trail : EditorTrails::ITrail
 	Trail()
 	{
 		m_samples.Reserve(1000);
+		m_samplesHandles.Reserve(1000);
 		m_events.Reserve(25);
 
 		@m_player = TrailPlayer(this);
-	}
-
-	string ToJsonString()
-	{
-		auto data = Json::Object();
-		data['samples'] = Json::Array();
-		data['events'] = Json::Array();
-		data['samples'].Add("__TAG__");
-		for (uint i = 0; i < m_events.Length; i++) {
-			data['events'].Add(m_events[i].ToJson());
-		}
-		// without a method like the below, we can easily take 10+ seconds to serialize a very large json document.
-		auto dataStr = Json::Write(data);
-		string samplesStr = "";
-		auto lastPause = Time::Now;
-		for (uint i = 0; i < m_samples.Length; i++) {
-			samplesStr += (i > 0 ? ", " : "") + Json::Write(m_samples[i].ToJson());
-			if (Time::Now - lastPause > 5) {
-				yield();
-				lastPause = Time::Now;
-			}
-		}
-		auto parts = dataStr.Split('"__TAG__"');
-		parts.InsertAt(1, samplesStr);
-		return string::Join(parts, samplesStr);
 	}
 
 #if TMNEXT
@@ -86,6 +63,7 @@ class Trail : EditorTrails::ITrail
 		newSample.m_dir = quat(scriptPlayer.AimDirection);
 		newSample.m_velocity = velocity;
 		m_samples.InsertLast(newSample);
+		m_samplesHandles.InsertLast(m_samples[m_samples.Length - 1]);
 	}
 
 #if TMNEXT
@@ -127,7 +105,7 @@ class Trail : EditorTrails::ITrail
 		return m_samples[m_samples.Length - 1].m_time;
 	}
 
-	double GetDuration()
+	double GetDuration() const
 	{
 		// Subtract the last sample time with the first sample time to get the duration of the trail
 		if (m_samples.Length == 0) {
@@ -138,12 +116,42 @@ class Trail : EditorTrails::ITrail
 		return lastTime - firstTime;
 	}
 
-	const array<ISample>@ GetSamples() const
+	string ToJsonString() const
 	{
-		return m_samples;
+		auto data = Json::Object();
+		data['samples'] = Json::Array();
+		data['events'] = Json::Array();
+		data['samples'].Add("__TAG__");
+		for (uint i = 0; i < m_events.Length; i++) {
+			data['events'].Add(m_events[i].ToJson());
+		}
+		// without a method like the below, we can easily take 10+ seconds to serialize a very large json document.
+		auto dataStr = Json::Write(data);
+		string samplesStr = "";
+		auto lastPause = Time::Now;
+		for (uint i = 0; i < m_samples.Length; i++) {
+			samplesStr += (i > 0 ? ", " : "") + Json::Write(m_samples[i].ToJson());
+			if (Time::Now - lastPause > 5) {
+				yield();
+				lastPause = Time::Now;
+			}
+		}
+		auto parts = dataStr.Split('"__TAG__"');
+		parts.InsertAt(1, samplesStr);
+		return string::Join(parts, samplesStr);
 	}
 
-	const array<IEvent>@ GetEvents() const
+	double get_Duration() const
+	{
+		return GetDuration();
+	}
+
+	const array<EditorTrails::ISample@>@ get_Samples() const
+	{
+		return m_samplesHandles;
+	}
+
+	const array<EditorTrails::IEvent@>@ get_Events() const
 	{
 		return m_events;
 	}

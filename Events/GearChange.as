@@ -5,12 +5,17 @@ namespace Events
 		int m_prev;
 		int m_new;
 
-		string Text() override
+		string get_Type() const override
+		{
+			return "GearChange";
+		}
+
+		string Text() const override
 		{
 			return Icons::Cog + " " + tostring(m_new);
 		}
 
-		Json::Value@ ToJson() override
+		Json::Value@ ToJson() const override
 		{
 			auto data = Event::ToJson();
 			data['gear'] = Json::Object();
@@ -19,7 +24,7 @@ namespace Events
 			return data;
 		}
 
-		vec4 Color() override
+		vec4 Color() const override
 		{
 			if (m_new > m_prev) {
 				return vec4(0.5f, 1, 0.5f, 1);

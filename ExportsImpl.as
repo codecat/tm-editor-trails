@@ -1,5 +1,7 @@
-namespace EditorTrials {
-    array<ITrail@>@ GetTrails() {
-        return Trails::Items;
+namespace EditorTrails
+{
+    array<ITrail@>@ GetTrails()
+    {
+        return Trails::ItemsForExport;
     }
 }

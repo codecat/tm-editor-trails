@@ -7,4 +7,5 @@ siteid = 251
 
 [script]
 dependencies = [ "Camera" ]
+optional_dependencies = [ "MLHook", "MLFeedRaceData" ]
 exports = [ "Exports.as" ]

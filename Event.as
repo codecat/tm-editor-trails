@@ -1,12 +1,17 @@
-class Event
+class Event : EditorTrails::IEvent
 {
 	double m_time;
 	vec3 m_position;
 
-	string Text() { return "?"; }
-	vec4 Color() { return vec4(1); }
+	string get_Type() const
+	{
+		return "Generic";
+	}
 
-	Json::Value@ ToJson()
+	string Text() const { return "?"; }
+	vec4 Color() const { return vec4(1); }
+
+	Json::Value@ ToJson() const
 	{
 		auto data = Json::Object();
 		data['t'] = m_time;
@@ -15,6 +20,16 @@ class Event
 		data['p'].Add(m_position.y);
 		data['p'].Add(m_position.z);
 		return data;
+	}
+
+	double get_Time() const
+	{
+		return m_time;
+	}
+
+	vec3 get_Position() const
+	{
+		return m_position;
 	}
 
 	void Render()

@@ -1,3 +1,4 @@
-namespace EditorTrials {
-    import array<ITrail@>@ GetTrails() from "EditorTrials";
+namespace EditorTrails
+{
+    import array<ITrail@>@ GetTrails() from "EditorTrails";
 }
