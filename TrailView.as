@@ -154,8 +154,20 @@ namespace TrailView
 
 	void RenderTrailEvents(Trail@ trail)
 	{
-		for (uint i = 0; i < trail.m_events.Length; i++) {
-			trail.m_events[i].Render();
+		if (trail.m_events.Length == 0) return;
+		auto ix = trail.m_eventsRenderOrder[0];
+		trail.m_events[ix].Render();
+		auto lastCameraDist = cast<Event>(trail.m_events[ix]).lastDistanceSqFromCamera;
+		float myCameraDist;
+		for (uint i = 1; i < trail.m_events.Length; i++) {
+			ix = trail.m_eventsRenderOrder[i];
+			trail.m_events[ix].Render();
+			myCameraDist = cast<Event>(trail.m_events[ix]).lastDistanceSqFromCamera;
+			if (myCameraDist > lastCameraDist) {
+				trail.m_eventsRenderOrder[i] = trail.m_eventsRenderOrder[i - 1];
+				trail.m_eventsRenderOrder[i - 1] = ix;
+			}
+			lastCameraDist = myCameraDist;
 		}
 	}
 

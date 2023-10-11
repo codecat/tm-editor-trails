@@ -3,6 +3,7 @@ class Trail : EditorTrails::ITrail
 	array<Sample> m_samples;
 	array<EditorTrails::ISample@> m_samplesHandles;
 	array<EditorTrails::IEvent@> m_events;
+	uint[] m_eventsRenderOrder;
 
 	TrailPlayer@ m_player; //TODO: Do we need this here? It's a circular reference!
 
@@ -19,8 +20,12 @@ class Trail : EditorTrails::ITrail
 		m_samples.Reserve(1000);
 		m_samplesHandles.Reserve(1000);
 		m_events.Reserve(25);
-
 		@m_player = TrailPlayer(this);
+	}
+
+	void AddEvent(EditorTrails::IEvent@ event) {
+		m_eventsRenderOrder.InsertLast(m_events.Length);
+		m_events.InsertLast(event);
 	}
 
 #if TMNEXT
@@ -90,7 +95,7 @@ class Trail : EditorTrails::ITrail
 			newGearChangeEvent.m_position = scriptPlayer.Position;
 			newGearChangeEvent.m_prev = m_lastGear;
 			newGearChangeEvent.m_new = gear;
-			m_events.InsertLast(newGearChangeEvent);
+			AddEvent(newGearChangeEvent);
 
 			// Remember our last gear
 			m_lastGear = scriptPlayer.EngineCurGear;
@@ -119,7 +124,7 @@ class Trail : EditorTrails::ITrail
 			newRespawnEvent.m_position = m_lastPosition;
 			newRespawnEvent.m_time = player.LastRespawnRaceTime;
 			newRespawnEvent.m_number = player.NbRespawnsRequested;
-			m_events.InsertLast(newRespawnEvent);
+			AddEvent(newRespawnEvent);
 			m_didRespawn = true;
 		}
 
@@ -146,7 +151,7 @@ class Trail : EditorTrails::ITrail
 				m_hasFinished = true;
 				newCheckpointEvent.m_isFinish = true;
 			}
-			m_events.InsertLast(newCheckpointEvent);
+			AddEvent(newCheckpointEvent);
 		}
 #endif
 	}

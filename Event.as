@@ -2,7 +2,7 @@ class Event : EditorTrails::IEvent
 {
 	double m_time;
 	vec3 m_position;
-	float lastDistanceFromCamera;
+	float lastDistanceSqFromCamera = 0.0;
 
 	string get_Type() const
 	{
@@ -40,6 +40,7 @@ class Event : EditorTrails::IEvent
 			return;
 		}
 
+		lastDistanceSqFromCamera = (Camera::GetCurrentPosition() - m_position).LengthSquared();
 		vec2 pa = screenPos.xy;
 		pa.x = Math::Round(pa.x);
 		pa.y = Math::Round(pa.y);
