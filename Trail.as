@@ -23,7 +23,8 @@ class Trail : EditorTrails::ITrail
 		@m_player = TrailPlayer(this);
 	}
 
-	void AddEvent(EditorTrails::IEvent@ event) {
+	void AddEvent(EditorTrails::IEvent@ event)
+	{
 		m_eventsRenderOrder.InsertLast(m_events.Length);
 		m_events.InsertLast(event);
 	}

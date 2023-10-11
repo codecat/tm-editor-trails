@@ -149,13 +149,15 @@ class Event : EditorTrails::IEvent
 	}
 
 	string[] hoverTextLines;
-	void PopulateHoverTextLines() {
+	void PopulateHoverTextLines()
+	{
 		if (hoverTextLines.Length > 0) return;
 		hoverTextLines.InsertLast("Generic Event");
 		hoverTextLines.InsertLast("Overload PopulateHoverTextLines");
 	}
 
-	float CalcMaxTextWidth(float fontSize) {
+	float CalcMaxTextWidth(float fontSize)
+	{
 		nvg::FontSize(fontSize);
 		float max = 0.;
 		for (uint i = 0; i < hoverTextLines.Length; i++) {
