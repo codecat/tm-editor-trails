@@ -2,6 +2,7 @@ class Event : EditorTrails::IEvent
 {
 	double m_time;
 	vec3 m_position;
+	float lastDistanceFromCamera;
 
 	string get_Type() const
 	{

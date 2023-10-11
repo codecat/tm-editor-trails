@@ -8,6 +8,11 @@ class Trail : EditorTrails::ITrail
 
 	vec3 m_lastPosition;
 	int m_lastGear = 1;
+	int m_lastRespawnCount = 0;
+	bool m_hasFinished = false;
+	bool m_didRespawn = false;
+	int m_lastLapCount = 1;
+	int m_lastCp = 0;
 
 	Trail()
 	{
@@ -24,6 +29,8 @@ class Trail : EditorTrails::ITrail
 	void Update(CTrackManiaScriptPlayer@ scriptPlayer)
 #endif
 	{
+		// Update lagged events before samples so events have access to m_lastPosition
+		UpdateLaggedEvents();
 		UpdateSample(scriptPlayer);
 		UpdateEvents(scriptPlayer);
 	}
@@ -62,8 +69,10 @@ class Trail : EditorTrails::ITrail
 		newSample.m_position = scriptPlayer.Position;
 		newSample.m_dir = quat(scriptPlayer.AimDirection);
 		newSample.m_velocity = velocity;
+		newSample.m_didRespawn = m_didRespawn;
 		m_samples.InsertLast(newSample);
 		m_samplesHandles.InsertLast(m_samples[m_samples.Length - 1]);
+		m_didRespawn = false;
 	}
 
 #if TMNEXT
@@ -86,6 +95,60 @@ class Trail : EditorTrails::ITrail
 			// Remember our last gear
 			m_lastGear = scriptPlayer.EngineCurGear;
 		}
+	}
+
+	void UpdateLaggedEvents() {
+		CheckUpdateRespawns();
+	}
+
+	void CheckUpdateRespawns()
+	{
+#if TMNEXT && DEPENDENCY_MLFEEDRACEDATA
+		auto rd = MLFeed::GetRaceData_V4();
+		if (rd.SortedPlayers_Race.Length == 0) return;
+		auto player = cast<MLFeed::PlayerCpInfo_V4>(rd.SortedPlayers_Race[0]);
+		if (!player.IsSpawned) {
+			m_lastRespawnCount = 0;
+			m_hasFinished = false;
+			m_lastLapCount = 1;
+			m_lastCp = 0;
+		} else if (m_lastRespawnCount != player.NbRespawnsRequested) {
+			m_lastRespawnCount = player.NbRespawnsRequested;
+			Events::Respawn@ newRespawnEvent = Events::Respawn();
+			newRespawnEvent.m_standing = Camera::GetCurrent().Vel.LengthSquared() <= 0.0001;
+			newRespawnEvent.m_position = m_lastPosition;
+			newRespawnEvent.m_time = player.LastRespawnRaceTime;
+			newRespawnEvent.m_number = player.NbRespawnsRequested;
+			m_events.InsertLast(newRespawnEvent);
+			m_didRespawn = true;
+		}
+
+		if (m_lastCp != player.CpCount) {
+			m_lastCp = player.CpCount;
+			Events::Checkpoint@ newCheckpointEvent = Events::Checkpoint();
+			newCheckpointEvent.m_time = player.LastCpTime;
+			newCheckpointEvent.m_position = m_lastPosition;
+			newCheckpointEvent.m_respawns = player.NbRespawnsRequested;
+			newCheckpointEvent.m_noRespawnTime = player.LastTheoreticalCpTime;
+			newCheckpointEvent.m_number = player.CpCount;
+
+			if (player.CurrentLap != m_lastLapCount) {
+				trace('CurrentLap = ' + player.CurrentLap);
+				m_lastLapCount = player.CurrentLap;
+				newCheckpointEvent.m_isEndLap = true;
+				newCheckpointEvent.m_lapEndNb = player.CurrentLap - 1;
+				int lapEndCp = (player.CurrentLap - 1) * (rd.CpCount + 1);
+				int lapStartCp = lapEndCp - rd.CPCount - 1;
+				newCheckpointEvent.m_lapTime = player.CpTimes[lapEndCp] - player.CpTimes[lapStartCp];
+			}
+
+			if (player.IsFinished && !m_hasFinished) {
+				m_hasFinished = true;
+				newCheckpointEvent.m_isFinish = true;
+			}
+			m_events.InsertLast(newCheckpointEvent);
+		}
+#endif
 	}
 
 	double GetStartTime()

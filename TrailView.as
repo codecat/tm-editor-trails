@@ -141,6 +141,8 @@ namespace TrailView
 			vec3 pb = Camera::ToScreen(trail.m_samples[i + 1].m_position);
 			if (pb.z > 0) {
 				firstPoint = true;
+			} else if (trail.m_samples[i + 1].m_didRespawn) {
+				nvg::MoveTo(pb.xy);
 			} else {
 				nvg::LineTo(pb.xy);
 			}

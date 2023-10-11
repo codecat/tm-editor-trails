@@ -4,6 +4,7 @@ class Sample : EditorTrails::ISample
 	vec3 m_position;
 	quat m_dir;
 	vec3 m_velocity;
+	bool m_didRespawn;
 
 	Sample Interpolate(const Sample &in other, float factor)
 	{
@@ -32,6 +33,9 @@ class Sample : EditorTrails::ISample
 		data['v'].Add(m_velocity.x);
 		data['v'].Add(m_velocity.y);
 		data['v'].Add(m_velocity.z);
+		if (m_didRespawn) {
+			data['respawn'] = m_didRespawn;
+		}
 		return data;
 	}
 
