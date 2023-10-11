@@ -7,3 +7,4 @@ siteid = 251
 
 [script]
 dependencies = [ "Camera" ]
+exports = ["Exports.as"]
