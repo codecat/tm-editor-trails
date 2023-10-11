@@ -103,8 +103,10 @@ class Trail : EditorTrails::ITrail
 		}
 	}
 
-	void UpdateLaggedEvents() {
+	void UpdateLaggedEvents()
+	{
 		CheckUpdateRespawns();
+		CheckUpdateCheckpoints();
 	}
 
 	void CheckUpdateRespawns()
@@ -115,9 +117,6 @@ class Trail : EditorTrails::ITrail
 		auto player = cast<MLFeed::PlayerCpInfo_V4>(rd.SortedPlayers_Race[0]);
 		if (!player.IsSpawned) {
 			m_lastRespawnCount = 0;
-			m_hasFinished = false;
-			m_lastLapCount = 1;
-			m_lastCp = 0;
 		} else if (m_lastRespawnCount != player.NbRespawnsRequested) {
 			m_lastRespawnCount = player.NbRespawnsRequested;
 			Events::Respawn@ newRespawnEvent = Events::Respawn();
@@ -128,8 +127,20 @@ class Trail : EditorTrails::ITrail
 			AddEvent(newRespawnEvent);
 			m_didRespawn = true;
 		}
+#endif
+	}
 
-		if (m_lastCp != player.CpCount) {
+	void CheckUpdateCheckpoints()
+	{
+#if TMNEXT && DEPENDENCY_MLFEEDRACEDATA
+		auto rd = MLFeed::GetRaceData_V4();
+		if (rd.SortedPlayers_Race.Length == 0) return;
+		auto player = cast<MLFeed::PlayerCpInfo_V4>(rd.SortedPlayers_Race[0]);
+		if (!player.IsSpawned) {
+			m_hasFinished = false;
+			m_lastLapCount = 1;
+			m_lastCp = 0;
+		} else if (m_lastCp != player.CpCount) {
 			m_lastCp = player.CpCount;
 			Events::Checkpoint@ newCheckpointEvent = Events::Checkpoint();
 			newCheckpointEvent.m_time = double(player.LastCpTime) / 1000.0;
