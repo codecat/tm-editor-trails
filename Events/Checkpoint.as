@@ -62,9 +62,9 @@ namespace Events
 		void PopulateHoverTextLines() override
 		{
 			if (hoverTextLines.Length > 0) return;
-			hoverTextLines.InsertLast(Time::Format(m_time));
+			hoverTextLines.InsertLast(Time::Format(m_time * 1000.));
 			hoverTextLines.InsertLast("No Respawn: " + Time::Format(m_noRespawnTime));
-			hoverTextLines.InsertLast("Nb Respawns: " + Time::Format(m_respawns));
+			hoverTextLines.InsertLast("Nb Respawns: " + m_respawns);
 		}
 	}
 }

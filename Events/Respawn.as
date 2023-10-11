@@ -35,7 +35,7 @@ namespace Events
 		void PopulateHoverTextLines() override
 		{
 			if (hoverTextLines.Length > 0) return;
-			hoverTextLines.InsertLast(Time::Format(m_time));
+			hoverTextLines.InsertLast(Time::Format(m_time * 1000.));
 			hoverTextLines.InsertLast("Respawn " + m_number);
 			if (m_standing) hoverTextLines.InsertLast("Standing Respawn");
 		}

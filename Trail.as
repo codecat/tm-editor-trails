@@ -122,7 +122,7 @@ class Trail : EditorTrails::ITrail
 			Events::Respawn@ newRespawnEvent = Events::Respawn();
 			newRespawnEvent.m_standing = Camera::GetCurrent().Vel.LengthSquared() <= 0.0001;
 			newRespawnEvent.m_position = m_lastPosition;
-			newRespawnEvent.m_time = player.LastRespawnRaceTime;
+			newRespawnEvent.m_time = double(player.LastRespawnRaceTime) / 1000.0;
 			newRespawnEvent.m_number = player.NbRespawnsRequested;
 			AddEvent(newRespawnEvent);
 			m_didRespawn = true;
@@ -131,7 +131,7 @@ class Trail : EditorTrails::ITrail
 		if (m_lastCp != player.CpCount) {
 			m_lastCp = player.CpCount;
 			Events::Checkpoint@ newCheckpointEvent = Events::Checkpoint();
-			newCheckpointEvent.m_time = player.LastCpTime;
+			newCheckpointEvent.m_time = double(player.LastCpTime) / 1000.0;
 			newCheckpointEvent.m_position = m_lastPosition;
 			newCheckpointEvent.m_respawns = player.NbRespawnsRequested;
 			newCheckpointEvent.m_noRespawnTime = player.LastTheoreticalCpTime;
