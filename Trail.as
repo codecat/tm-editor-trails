@@ -150,7 +150,6 @@ class Trail : EditorTrails::ITrail
 			newCheckpointEvent.m_number = player.CpCount;
 
 			if (player.CurrentLap != m_lastLapCount) {
-				trace('CurrentLap = ' + player.CurrentLap);
 				m_lastLapCount = player.CurrentLap;
 				newCheckpointEvent.m_isEndLap = true;
 				newCheckpointEvent.m_lapEndNb = player.CurrentLap - 1;

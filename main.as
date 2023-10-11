@@ -40,7 +40,6 @@ void OnEditorPlayLeave()
 	}
 
 	// Upload trails to blender if the setting is enabled
-	trace("DEBUG calling Upload::OnReenteredEditorAsync");
 	startnew(Upload::OnReenteredEditorAsync);
 
 	// Reset trail view
