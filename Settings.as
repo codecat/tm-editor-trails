@@ -52,3 +52,9 @@ vec4 Setting_CarVelocityColor = vec4(1, 1, 0, 1);
 
 [Setting category="Appearance" name="Event scale" min=0.4 max=2.0]
 float Setting_EventScale = 1.0f;
+
+[Setting category="Blender Integration" name="Enable" description="Upon reentering the editor, send the recorded trails to blender via an HTTP POST."]
+bool Setting_EnableUploadTrails = false;
+
+[Setting category="Blender Integration" name="POST URL" description="The full URL (including port) that the trails will be POSTed to."]
+string Setting_UploadTrailsURL = "http://localhost:42069/trails";

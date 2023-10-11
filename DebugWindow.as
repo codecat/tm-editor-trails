@@ -10,6 +10,12 @@ namespace DebugWindow
 				Trails::Clear();
 			}
 
+			UI::BeginDisabled(!Setting_EnableUploadTrails);
+			if (UI::Button("Upload Trails to Blender")) {
+				startnew(Upload::OnReenteredEditorAsync);
+			}
+			UI::EndDisabled();
+
 			UI::Separator();
 
 			UI::Text("State::InEditor: \\$f39" + tostring(State::InEditor));

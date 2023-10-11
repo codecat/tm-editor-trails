@@ -6,6 +6,17 @@ class Event
 	string Text() { return "?"; }
 	vec4 Color() { return vec4(1); }
 
+	Json::Value@ ToJson()
+	{
+		auto data = Json::Object();
+		data['t'] = m_time;
+		data['p'] = Json::Array();
+		data['p'].Add(m_position.x);
+		data['p'].Add(m_position.y);
+		data['p'].Add(m_position.z);
+		return data;
+	}
+
 	void Render()
 	{
 		vec3 screenPos = Camera::ToScreen(m_position);

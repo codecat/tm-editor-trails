@@ -14,4 +14,24 @@ class Sample
 		ret.m_velocity = Math::Lerp(m_velocity, other.m_velocity, factor);
 		return ret;
 	}
+
+	Json::Value@ ToJson()
+	{
+		auto data = Json::Object();
+		data['t'] = m_time;
+		data['p'] = Json::Array();
+		data['p'].Add(m_position.x);
+		data['p'].Add(m_position.y);
+		data['p'].Add(m_position.z);
+		data['q'] = Json::Array();
+		data['q'].Add(m_dir.x);
+		data['q'].Add(m_dir.y);
+		data['q'].Add(m_dir.z);
+		data['q'].Add(m_dir.w);
+		data['v'] = Json::Array();
+		data['v'].Add(m_velocity.x);
+		data['v'].Add(m_velocity.y);
+		data['v'].Add(m_velocity.z);
+		return data;
+	}
 }
