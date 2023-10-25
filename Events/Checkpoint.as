@@ -14,6 +14,7 @@ namespace Events
 		string get_Type() const override
 		{
 			return "Checkpoint";
+
 		}
 
 		string Text() const override

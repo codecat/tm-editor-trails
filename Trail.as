@@ -73,9 +73,9 @@ class Trail : EditorTrails::ITrail
 		Sample newSample;
 		newSample.m_time = State::CurrentRaceTime / 1000.0;
 		newSample.m_position = scriptPlayer.Position;
-		newSample.m_dir = quat(scriptPlayer.AimDirection);
 		newSample.m_velocity = velocity;
 		newSample.m_didRespawn = m_didRespawn;
+		newSample.SetRotation(scriptPlayer);
 		m_samples.InsertLast(newSample);
 		m_samplesHandles.InsertLast(m_samples[m_samples.Length - 1]);
 		m_didRespawn = false;
