@@ -1,3 +1,6 @@
+bool g_EventHovered = false;
+vec2 g_MouseCoords;
+
 namespace TrailView
 {
 	int FontBold;
@@ -61,6 +64,8 @@ namespace TrailView
 		double sumY = 0;
 		double sumZ = 0;
 		int numPos = 0;
+		g_EventHovered = false;
+		g_MouseCoords = UI::GetMousePos();
 
 		for (uint i = 0; i < Trails::Items.Length; i++) {
 			auto trail = Trails::Items[i];
@@ -141,6 +146,8 @@ namespace TrailView
 			vec3 pb = Camera::ToScreen(trail.m_samples[i + 1].m_position);
 			if (pb.z > 0) {
 				firstPoint = true;
+			} else if (trail.m_samples[i + 1].m_didRespawn) {
+				nvg::MoveTo(pb.xy);
 			} else {
 				nvg::LineTo(pb.xy);
 			}
@@ -152,8 +159,20 @@ namespace TrailView
 
 	void RenderTrailEvents(Trail@ trail)
 	{
-		for (uint i = 0; i < trail.m_events.Length; i++) {
-			trail.m_events[i].Render();
+		if (trail.m_events.Length == 0) return;
+		auto ix = trail.m_eventsRenderOrder[0];
+		trail.m_events[ix].Render();
+		auto lastCameraDist = cast<Event>(trail.m_events[ix]).lastDistanceSqFromCamera;
+		float myCameraDist;
+		for (uint i = 1; i < trail.m_events.Length; i++) {
+			ix = trail.m_eventsRenderOrder[i];
+			trail.m_events[ix].Render();
+			myCameraDist = cast<Event>(trail.m_events[ix]).lastDistanceSqFromCamera;
+			if (myCameraDist > lastCameraDist) {
+				trail.m_eventsRenderOrder[i] = trail.m_eventsRenderOrder[i - 1];
+				trail.m_eventsRenderOrder[i - 1] = ix;
+			}
+			lastCameraDist = myCameraDist;
 		}
 	}
 

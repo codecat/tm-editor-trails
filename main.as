@@ -5,6 +5,8 @@ namespace State
 	bool MenuButtonDown = false;
 
 	int CurrentRaceTime = 0;
+
+	float DeltaTime = 10.;
 }
 
 void OnEditorLeave()
@@ -36,6 +38,9 @@ void OnEditorPlayLeave()
 			Trails::Items.RemoveAt(Trails::Items.Length - 1);
 		}
 	}
+
+	// Upload trails to blender if the setting is enabled
+	startnew(Upload::OnReenteredEditorAsync);
 
 	// Reset trail view
 	TrailView::Reset();
@@ -204,6 +209,7 @@ void Main()
 void Update(float dt)
 {
 	if (State::InEditor && !State::InEditorPlay) {
+		State::DeltaTime = dt;
 		// Update trail view
 		TrailView::Update(dt);
 	}

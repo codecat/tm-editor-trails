@@ -1,11 +1,13 @@
 namespace Trails
 {
 	array<Trail@> Items;
+	array<const EditorTrails::ITrail@> ItemsForExport;
 
 	Trail@ CreateNew()
 	{
 		Trail@ newTrail = Trail();
 		Items.InsertLast(newTrail);
+		ItemsForExport.InsertLast(newTrail);
 		return newTrail;
 	}
 
@@ -28,5 +30,6 @@ namespace Trails
 	void Clear()
 	{
 		Items.RemoveRange(0, Items.Length);
+		ItemsForExport.RemoveRange(0, ItemsForExport.Length);
 	}
 }
