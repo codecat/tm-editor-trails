@@ -189,7 +189,9 @@ namespace TrailView
 				UI::Text("Enter test mode to record a trail.");
 			} else {
 				UI::PushItemWidth(-1);
+				UI::BeginDisabled(UI::IsKeyPressed(UI::Key::Tab));
 				double time = UI::SliderDouble("##PlayPosition", CurrentTime, MinTime, MaxTime);
+				UI::EndDisabled();
 				if (time != CurrentTime) {
 					SetCurrentTime(time);
 					Playing = false;
