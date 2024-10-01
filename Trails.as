@@ -28,5 +28,6 @@ namespace Trails
 	void Clear()
 	{
 		Items.RemoveRange(0, Items.Length);
+		ResetEppTrails();
 	}
 }

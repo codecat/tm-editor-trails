@@ -62,6 +62,8 @@ namespace TrailView
 		double sumZ = 0;
 		int numPos = 0;
 
+		EppState::BeforeDraw();
+
 		for (uint i = 0; i < Trails::Items.Length; i++) {
 			auto trail = Trails::Items[i];
 
@@ -122,6 +124,16 @@ namespace TrailView
 	}
 
 	void RenderTrailLine(Trail@ trail)
+	{
+		if (ShouldUseEditorPlusPlus()) {
+			RenderTrailLineEpp(trail);
+		} else {
+			RenderTrailLineNvg(trail);
+		}
+	}
+
+
+	void RenderTrailLineNvg(Trail@ trail)
 	{
 		nvg::BeginPath();
 		bool firstPoint = true;
