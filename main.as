@@ -133,7 +133,7 @@ void Main()
 
 		bool entityStateAvailable = scriptPlayer.IsEntityStateAvailable;
 		int startTime = scriptPlayer.StartTime;
-		State::CurrentRaceTime = scriptPlayer.CurrentRaceTime;
+		State::CurrentRaceTime = GetApp().Network.PlaygroundClientScriptAPI.GameTime - scriptPlayer.StartTime;
 
 #else
 		// Get player information in Maniaplanet
