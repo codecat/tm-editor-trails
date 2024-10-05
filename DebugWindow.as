@@ -10,12 +10,21 @@ namespace DebugWindow
 				Trails::Clear();
 			}
 
+			UI::BeginDisabled(!Setting_EnableUploadTrails);
+			if (UI::Button("Upload Trails to Blender")) {
+				startnew(Upload::OnReenteredEditorAsync);
+			}
+			UI::EndDisabled();
+
 			UI::Separator();
 
 			UI::Text("State::InEditor: \\$f39" + tostring(State::InEditor));
 			UI::Text("State::InEditorPlay: \\$f39" + tostring(State::InEditorPlay));
 			UI::Text("State::MenuButtonDown: \\$f39" + tostring(State::MenuButtonDown));
 			UI::Text("State::CurrentRaceTime: \\$f39" + tostring(State::CurrentRaceTime));
+			UI::Text("State::DeltaTime: \\$f39" + tostring(State::DeltaTime));
+			UI::Text("g_EventHovered: \\$f39" + tostring(g_EventHovered));
+			UI::Text("g_MouseCoords: \\$f39" + tostring(g_MouseCoords));
 
 			UI::Separator();
 
