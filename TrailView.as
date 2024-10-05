@@ -63,6 +63,9 @@ namespace TrailView
 		int numPos = 0;
 
 		for (uint i = 0; i < Trails::Items.Length; i++) {
+			if (!(Setting_AllTrails || i == Setting_TrailNr)) {
+				continue;
+			}
 			auto trail = Trails::Items[i];
 
 			double startTime = trail.GetStartTime();
@@ -102,7 +105,7 @@ namespace TrailView
 
 			vec3 middle = vec3(float(sumX), float(sumY), float(sumZ));
 
-			if (Trails::Items.Length == 1 || SmoothCameraTargetFirstFrame) {
+			if (Trails::Items.Length == 1 || SmoothCameraTargetFirstFrame || !Setting_AllTrails) {
 				SmoothCameraTarget = middle;
 				SmoothCameraTargetFirstFrame = false;
 			} else {
@@ -220,8 +223,23 @@ namespace TrailView
 					UI::Text("\\$666(" + MinTime + " - " + MaxTime + ")\\$z Duration: \\$f39" + Text::Format("%.03f", MaxTime - MinTime));
 				}
 
-				if (UI::Button("Remove trails")) {
-					Trails::Clear();
+				Setting_AllTrails = UI::Checkbox("All Trails", Setting_AllTrails);
+				UI::SameLine();
+				if (Setting_AllTrails) {
+					if (UI::Button("Remove trails")) {
+						Trails::Clear();
+					}
+				} else {
+					UI::PushItemWidth(200);
+					Setting_TrailNr = UI::SliderInt("##TrailNr", Setting_TrailNr, 0, Trails::Items.Length - 1);
+					UI::PopItemWidth();
+					UI::SameLine();
+					if (UI::Button("Remove trail")) {
+						Trails::Items.RemoveAt(Setting_TrailNr);
+						if (Setting_TrailNr >= Trails::Items.Length) {
+							Setting_TrailNr = Trails::Items.Length - 1;
+						}
+					}
 				}
 			}
 		}
