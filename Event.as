@@ -17,12 +17,21 @@ class Event
 		pa.x = Math::Round(pa.x);
 		pa.y = Math::Round(pa.y);
 
-		vec2 pb = pa - vec2(0, Math::Round(64 * Setting_EventScale));
+		vec2 pb = pa - vec2(0, Math::Round(32 * Setting_EventScale));
+		vec2 size = vec2(32 * Setting_EventScale);
 
 		vec4 color = Color();
 
 		nvg::BeginPath();
-		nvg::Circle(pb, Math::Round(32 * Setting_EventScale));
+		switch (Setting_EventStyle) {
+			case EventStyle::Circle:
+				nvg::Circle(pb, size.x);
+				break;
+
+			case EventStyle::Rectangle:
+				nvg::RoundedRect(pb - size / 2, size, 3);
+				break;
+		}
 		nvg::FillColor(color);
 		nvg::Fill();
 
@@ -35,7 +44,7 @@ class Event
 
 		nvg::BeginPath();
 		nvg::FontFace(TrailView::FontBold);
-		nvg::FontSize(Math::Round(22 * Setting_EventScale));
+		nvg::FontSize(Math::Round(16 * Setting_EventScale));
 		nvg::TextAlign(nvg::Align::Center | nvg::Align::Middle);
 		nvg::FillColor(vec4(0, 0, 0, 1));
 		nvg::Text(pb + vec2(0, 2), Text());

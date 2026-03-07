@@ -35,6 +35,12 @@ bool Setting_ShowDebugWindow = false;
 
 
 
+enum EventStyle
+{
+	Circle,
+	Rectangle,
+}
+
 [Setting category="Appearance" name="Trail line width" min=1 max=10]
 int Setting_TrailWidth = 2;
 
@@ -49,6 +55,9 @@ vec4 Setting_CarPositionColor = vec4(1, 0, 0, 1);
 
 [Setting category="Appearance" name="Velocity vector color" color]
 vec4 Setting_CarVelocityColor = vec4(1, 1, 0, 1);
+
+[Setting category="Appearance" name="Event style"]
+EventStyle Setting_EventStyle = EventStyle::Rectangle;
 
 [Setting category="Appearance" name="Event scale" min=0.4 max=2.0]
 float Setting_EventScale = 1.0f;
