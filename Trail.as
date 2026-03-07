@@ -22,6 +22,13 @@ class Trail
 	void Update(CTrackManiaScriptPlayer@ scriptPlayer)
 #endif
 	{
+		// Ignore player when it positioned at exactly <0, 0, 0>. This can happen when the player respawns, and
+		// is highly unlikely to happen in a real scenario. Even if it did, we'd skip over this position and use
+		// the next sample just fine.
+		if (scriptPlayer.Position.LengthSquared() == 0) {
+			return;
+		}
+
 		UpdateSample(scriptPlayer);
 		UpdateEvents(scriptPlayer);
 	}
