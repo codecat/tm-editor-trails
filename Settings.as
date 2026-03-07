@@ -13,7 +13,11 @@ bool Setting_Follow = false;
 [Setting hidden]
 bool Setting_Events = true;
 
+[Setting hidden]
+bool Setting_AllTrails = true;
 
+[Setting hidden]
+uint Setting_TrailNr = 0;
 
 [Setting category="General" name="Minimum duration" min=1.0 max=60.0 description="The minimum time in seconds for a trail's instance to be considered valid."]
 double Setting_MinimumDuration = 1.0;
